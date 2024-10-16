@@ -40,10 +40,11 @@ var (
 )
 
 func NewRepository() *Repository {
-	repo := &Repository{}
+	var repo *Repository
 	var db *sql.DB
 	once.Do(func() {
 		var err error
+		repo = &Repository{}
 		db, err = sql.Open(
 			"mysql",
 			fmt.Sprintf("%s:%s@tcp(mysqlbalance:%s)/balance?parseTime=true",
@@ -58,8 +59,8 @@ func NewRepository() *Repository {
 		if err != nil {
 			log.Fatalf("not possible to create balance table %v\n", err)
 		}
+		repo.db = db
 	})
-	repo.db = db
 	return repo
 }
 
